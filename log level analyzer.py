@@ -17,26 +17,26 @@ A well-designed solution should account for the following scenarios:
 """
 
 import sys
-filename = sys.argv[1] if len(sys.argv) > 1 else r'E:\SQL\sample text file\log.txt'
-def log_level_analyzer(filename:str) ->dict[str,int]:
-    log={'INFO':0, 'WARNING':0, 'ERROR':0}
+def log_level_analyzer(filename: str) -> dict[str, int]:
+    log: dict[str, int] = {'INFO': 0, 'WARNING': 0, 'ERROR': 0}
     try:
-        with open(filename,'r') as file:
+        with open(filename, 'r') as file:
             for line in file:
-                words = line.lower().split()
+                words = line.strip().split()
                 if len(words) < 3:
                     continue
                 log_word = words[2].upper()
                 if log_word in log:
-                    log[log_word] +=1
-        return log
+                    log[log_word] += 1
     except FileNotFoundError:
         print(f"Error: File '{filename}' not found.")
         return {}
+    return log
 
-
-
-output = log_level_analyzer(filename)
-
-for word,count in output.items():
-    print(f'{word} : {count}')
+if __name__ == "__main__":
+    filename = sys.argv[1] if len(sys.argv) > 1 else 'log.txt'
+    output = log_level_analyzer(filename)
+    with open('output.txt', 'w') as out:
+        for word, count in output.items():
+            print(f'{word} : {count}')
+            out.write(f'{word} : {count}\n')
